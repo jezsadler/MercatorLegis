@@ -1,0 +1,97 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Gang Special Rules</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Anton:400,700|Open+Sans:400,600,600italic,700">
+
+    <style>
+        h1 {
+            font-size: 64pt;
+        }
+        h1,h2 {text-align: center;}
+        h1,h2,h3,h4,h5,h6 {
+            font-family: "Anton", cursive;
+            font-weight: 400;
+            font-style: normal;
+            letter-spacing: 1px;
+            color: brown;
+            text-rendering: optimizeLegibility;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+            text-transform: uppercase;
+        }
+        
+        th {
+            background-color: darkslategray;
+            color: cornsilk;}
+        td {
+            border-color: brown;
+            border-bottom: 1px solid;
+        }
+        tr:nth-child(even) {
+            background-color:cornsilk;
+        }
+
+        blockquote {
+            background-color: burlywood;
+            border: 1px solid;
+            box-shadow: 2px 2px brown;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ gang_name }}</h1>
+    <h2>Special Rules Quick Reference</h2>
+    {% if gang_skills is defined %}
+        <h3>Gang Skills</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Skill Name</th>
+                    <th>Skill Set</th>
+                    <th>Skill Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in gang_skills.index %}
+                    <tr>
+                        <td>{{ gang_skills['Skill Name'][row] }}</td>
+                        <td>{{ gang_skills['Skill Set'][row] }}</td>
+                        <td>{{ gang_skills['Description'][row] }}
+                            {% if gang_skills['Action'][row] != 0 %}
+                                <blockquote>{{ gang_skills['Action'][row] }}</blockquote>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+    <h3>No gang skills found.</h3>
+    {% endif %}
+    {% if weapon_traits is defined %}
+    <br>
+    <br>
+    <h3>Weapon Traits</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Trait Name</th>
+                <th>Trait Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in weapon_traits.index %}
+            <tr>
+                <td>{{ weapon_traits['Trait Name'][row] }}</td>
+                <td>{{ weapon_traits['Description'][row] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    {% else %}
+    <h3>No weapon traits found.</h3>
+    {% endif %}
+    </body>
+    </html>
