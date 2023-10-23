@@ -24,6 +24,7 @@ with open("cards.html") as fp:
 
 # Get the gang name:
 gang_name = soup.title.contents[0]
+gang_type = soup.body.find_all("table")[-2].find_all('td')[0].contents[0]
 
 # Get the ganger names. Currently not using these for anything.
 ganger_names = [name.contents[1].text.rstrip() for name in soup.find_all("h5")][:-1]
@@ -37,7 +38,7 @@ for w in weapon_tables:
     gang_weapon_traits += traits
 
 # Group the skills with parameters (e..g. Rapid Fire (X))
-x_traits = [t.split('(')[0]+'(X)' for t in gang_weapon_traits if '(' in t]
+x_traits = [t.split('(')[0].lower()+'(x)' for t in gang_weapon_traits if '(' in t]
 
 gang_weapon_traits = set([t.lower() for t in gang_weapon_traits if '(' not in t] + x_traits)
 
@@ -75,14 +76,12 @@ env = Environment(loader=FileSystemLoader("templates/"),autoescape=select_autoes
 
 # Load this gang's data into template. 
 template = env.get_template("srqr_template.html")
-content = template.render({"gang_name":gang_name,
-                          "gang_skills":gang_skill_table,
-                          "weapon_traits":gang_trait_table})
 
 filename = f"{gang_name.replace(' ','')}QuickRef.html"
 
 with open(filename, mode="w", encoding="utf-8") as quickref:
     quickref.write(template.render({"gang_name":gang_name,
-                          "gang_skills":gang_skill_table,
-                          "weapon_traits":gang_trait_table}))
+                                    "gang_type":gang_type,
+                                    "gang_skills":gang_skill_table,
+                                    "weapon_traits":gang_trait_table}))
     print(f"... wrote {filename}")
