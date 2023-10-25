@@ -25,7 +25,7 @@ def generate_gang_quickref(cardpath):
 
     # Open the cards file from YakTribe:
     if cardpath.startswith("https://yaktribe.games/underhive/gang/"):
-        gang_id = cardpath.split(".")[2].replace("/","")
+        gang_id = cardpath.split(".")[-1].replace("/","")
         cardpath = "https://yaktribe.games/underhive/print/cards/" + gang_id
         with urllib.request.urlopen(cardpath) as fp:
             soup = BeautifulSoup(fp, 'html.parser')
