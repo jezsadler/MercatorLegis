@@ -1,0 +1,76 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Gang Special Rules</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Anton:400,700|Open+Sans:400,600,600italic,700">
+
+    <style>
+        h1 {
+            font-size: 64pt;
+        }
+        h1,h2,h4 {text-align: center;}
+        h1,h2,h3,h4,h5,h6 {
+            font-family: "Anton", cursive;
+            font-weight: 400;
+            font-style: normal;
+            letter-spacing: 1px;
+            color: brown;
+            text-rendering: optimizeLegibility;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+            text-transform: uppercase;
+        }
+        
+        th {
+            background-color: darkslategray;
+            color: cornsilk;}
+        td {
+            border-color: brown;
+            border-bottom: 1px solid;
+        }
+        tr:nth-child(even) {
+            background-color:cornsilk;
+        }
+
+        blockquote {
+            background-color: burlywood;
+            border: 1px solid;
+            box-shadow: 2px 2px brown;
+        }
+        body {
+            background-color: cornsilk;
+        }
+    </style>
+</head>
+<body>
+    <h2>Necromunda Special Rules Quick Reference Generator</h2>
+    <h4>by RemySparks</h4>
+    <form method="post">
+        <label for="gangpath">Yaktribe URL:</label>
+        <input name="gangpath" id="gangpath" type="url" size="50" value = "https://yaktribe.games/underhive/gang/" required>
+        <input type="submit" formtarget = "_self" value="Gather Special Rules">
+    </form>
+    <p>This web tool aims to make Necromunda slightly more playable by 
+        collecting together the various rules needed for a specific gang
+        and presenting them on a few pages, rather than scattered over 
+        several volumes. 
+    </p>
+    <p>It uses information about your gang from <a href="https://yaktribe.games/underhive">Yaktribe</a>,
+        together with rules text compiled by <a href="https://necrodamus.org/"> Necrodamus</a>.
+    </p>
+    <p>Rules currently supported:</p>
+    <ul>
+        <li>Skills</li>
+        <li>Gang-Specific Skills</li>
+        <li>Weapon Traits</li>
+    </ul>
+    <p>Currently not supported:</p>
+    <ul>
+        <li>Wargear</li>
+        <li>Wyrd Powers</li>
+        <li>Gang-Specific Customisations (e.g. Goliath Gene-Smithing)</li>
+        <li>Other special rules</li>
+    </ul>
+</body>
+</html>
