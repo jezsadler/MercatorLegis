@@ -1,6 +1,7 @@
 import pandas as pd
 import html
-import urllib.request 
+import urllib.request
+import re
 
 from bs4 import BeautifulSoup, Tag
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -14,6 +15,11 @@ def generate_gang_quickref(cardpath):
     universal = pd.read_csv("universalskills.csv")
     universal['Skill Set'] = universal['Skill Set'].str.title()
     universal['Skill Name'] = universal['Skill Name'].str.replace('\u200b','')
+ 
+    #Load in Wyrd Powers:
+    wyrd = pd.read_csv("wyrdpowers.csv")
+    wyrd["Combi Name"] = wyrd["Discipline"] + " - " + wyrd["Power Name"]
+
     actions =  universal['Action'].fillna(0)
     universal['Action'] = actions
 
@@ -22,10 +28,22 @@ def generate_gang_quickref(cardpath):
     weapon_traits['Trait Name'] = weapon_traits['Trait Name'].str.title()
 
     # TODO: add wargear and other special rules.
+    armour = pd.read_csv("armour.csv")
+
+    wargear = pd.concat([armour])
+    wargear['Wargear Name'] = wargear['Wargear Name'].str.title()
+
+
+    # These rules impact things outside of the battle, so don't need to
+    # be on the quick reference.
+    ignore_rules = ["gang fighter (ganger)","gang fighter (prospect)",
+                    "gang fighter (juve)","gang leader","fast learner",
+                    "tools of the trade","promotion (specialist)", 
+                    "promotion (champion)"]
 
     # Open the cards file from YakTribe:
     if cardpath.startswith("https://yaktribe.games/underhive/gang/"):
-        gang_id = cardpath.split(".")[-1].replace("/","")
+        gang_id = re.findall("(\d+)(?!.*\d)",cardpath)[0]
         cardpath = "https://yaktribe.games/underhive/print/cards/" + gang_id
         with urllib.request.urlopen(cardpath) as fp:
             soup = BeautifulSoup(fp, 'html.parser')
@@ -84,8 +102,34 @@ def generate_gang_quickref(cardpath):
     gang_skills = {skill.lower() for skill in gang_skills if skill != ''}
     gang_rules = {rule.lower() for rule in gang_rules if rule != ''}
 
+    # Group activation skills are a bit fiddly - 
+    groupacts = {r for r in gang_rules if r.startswith("group activation") 
+                 and r != "group activation (exotic beasts)"}
+    gang_rules = {r for r in gang_rules if not r.startswith("group activation") 
+                 or r == "group activation (exotic beasts)"}
+    if len(groupacts) >= 1:
+        gang_rules.add("group activation (x)")
+    
+
     # Filter the big tables to what this gang needs.
     gang_trait_table = weapon_traits[weapon_traits['Trait Name'].str.lower().isin(gang_weapon_traits)]
     gang_skill_table = universal[universal["Skill Name"].str.lower().isin(gang_skills)]
+    gang_wyrd_table = wyrd[wyrd["Power Name"].str.lower().isin(gang_skills) |
+                           wyrd["Combi Name"].str.lower().isin(gang_skills)]
+    if len(gang_wyrd_table) == 0:
+        gang_wyrd_table = None
+    gang_wargear_table = wargear[wargear["Wargear Name"].str.lower().isin(gang_wargear)]
+    if len(gang_wargear_table) == 0:
+        gang_wargear_table = None
 
-    return gang_name,gang_type,gang_skill_table,gang_trait_table
+    unknown_traits = [t for t in gang_weapon_traits if t not in list(weapon_traits['Trait Name'].str.lower())]
+    unknown_skills = [s for s in gang_skills if s not in list(universal["Skill Name"].str.lower())
+                      and s not in list(wyrd["Power Name"].str.lower())
+                      and s not in list(wyrd["Combi Name"].str.lower())]
+    unknown_wargear = [w for w in gang_wargear if w not in list(wargear["Wargear Name"].str.lower())]
+    unknown_special = [r for r in gang_rules if r not in ignore_rules]
+
+    unknown_rules = unknown_traits + unknown_skills + unknown_wargear + unknown_special
+    if unknown_rules == []:
+        unknown_rules = None
+    return gang_name,gang_type,gang_skill_table,gang_wyrd_table,gang_trait_table,gang_wargear_table,unknown_rules

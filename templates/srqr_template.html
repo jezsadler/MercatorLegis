@@ -71,6 +71,31 @@
     {% else %}
     <h3>No gang skills found.</h3>
     {% endif %}
+    {% if wyrd_powers is not none %}
+    <br>
+    <h3>Wyrd Powers</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Power Name</th>
+                <th>Discipline</th>
+                <th>Action Type</th>
+                <th>Power Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in wyrd_powers.index %}
+                <tr>
+                    <td>{{ wyrd_powers['Power Name'][row] }}</td>
+                    <td>{{ wyrd_powers['Discipline'][row] }}</td>
+                    <td>{{ wyrd_powers['Action Type'][row] }}</td>
+                    <td>{{ wyrd_powers['Description'][row] }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
     {% if weapon_traits is defined %}
     <br>
     <br>
@@ -93,6 +118,35 @@
         </table>
     {% else %}
     <h3>No weapon traits found.</h3>
+    {% endif %}
+    {% if wargear is defined %}
+    <br>
+    <br>
+    <h3>Wargear</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Wargear Name</th>
+                <th>Wargear Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in wargear.index %}
+            <tr>
+                <td>{{ wargear['Wargear Name'][row] }}</td>
+                <td>{{ wargear['Description'][row] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    {% else %}
+    <h3>No wargear found.</h3>
+    {% endif %}
+    {% if unknown_rules is defined %}
+    <br>
+    <p>The following rules were found in the gang list, but not recognised:
+    </p>
+    <p>{{ unknown_rules }}</p>
     {% endif %}
     </body>
     </html>
