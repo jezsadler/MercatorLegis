@@ -64,3 +64,4 @@ VERSATILE,"The wielder of a Versatile weapon does not need to be in base contact
 The enemy model is considered to be engaged, but may not in turn be Engaging the fighter armed with the Versatile weapon unless they too are armed with a Versatile weapon, and so may not be able to make Reaction attacks.
 At all other times other than during this fighter’s activation, Versatile has no effect."
 WEB,"If the wound roll for a Web attack against a fighter is successful, no wound is inflicted, and no save roll or Injury roll is made. Instead, the target automatically becomes Webbed."
+Shred,"Double the AP if the Wound roll is a 6 (before modifiers)."

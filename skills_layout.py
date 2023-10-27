@@ -2,6 +2,7 @@ import pandas as pd
 import html
 import urllib.request
 import re
+from string import capwords
 
 from bs4 import BeautifulSoup, Tag
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -13,7 +14,7 @@ def generate_gang_quickref(cardpath):
     YakTribe list for the gang."""
     # Load in the gang skills:
     universal = pd.read_csv("universalskills.csv")
-    universal['Skill Set'] = universal['Skill Set'].str.title()
+    universal['Skill Set'] = universal['Skill Set'].apply(capwords)
     universal['Skill Name'] = universal['Skill Name'].str.replace('\u200b','')
  
     #Load in Wyrd Powers:
@@ -25,21 +26,25 @@ def generate_gang_quickref(cardpath):
 
     # Load in the weapon traits:
     weapon_traits = pd.read_csv("weapontraits.csv")
-    weapon_traits['Trait Name'] = weapon_traits['Trait Name'].str.title()
+    weapon_traits['Trait Name'] = weapon_traits['Trait Name'].apply(capwords)
 
     # TODO: add wargear and other special rules.
     armour = pd.read_csv("armour.csv")
+    equipment = pd.read_csv("personalequipment.csv")
 
-    wargear = pd.concat([armour])
-    wargear['Wargear Name'] = wargear['Wargear Name'].str.title()
+    wargear = pd.concat([armour,equipment])
+    wargear['Wargear Name'] = wargear['Wargear Name'].apply(capwords)
+    wargear['Additional Rules'] = wargear['Additional Rules'].fillna('')
 
+    special_rules = pd.read_csv("specials.csv")
 
     # These rules impact things outside of the battle, so don't need to
     # be on the quick reference.
     ignore_rules = ["gang fighter (ganger)","gang fighter (prospect)",
-                    "gang fighter (juve)","gang leader","fast learner",
-                    "tools of the trade","promotion (specialist)", 
-                    "promotion (champion)"]
+                    "gang fighter (juve)","gang fighter (crew)","gang leader",
+                    "fast learner","tools of the trade","promotion (specialist)", 
+                    "promotion (champion)","psychoteric whispers",
+                    "infiltration"]
 
     # Open the cards file from YakTribe:
     if cardpath.startswith("https://yaktribe.games/underhive/gang/"):
@@ -114,6 +119,7 @@ def generate_gang_quickref(cardpath):
     # Filter the big tables to what this gang needs.
     gang_trait_table = weapon_traits[weapon_traits['Trait Name'].str.lower().isin(gang_weapon_traits)]
     gang_skill_table = universal[universal["Skill Name"].str.lower().isin(gang_skills)]
+
     gang_wyrd_table = wyrd[wyrd["Power Name"].str.lower().isin(gang_skills) |
                            wyrd["Combi Name"].str.lower().isin(gang_skills)]
     if len(gang_wyrd_table) == 0:
@@ -121,15 +127,24 @@ def generate_gang_quickref(cardpath):
     gang_wargear_table = wargear[wargear["Wargear Name"].str.lower().isin(gang_wargear)]
     if len(gang_wargear_table) == 0:
         gang_wargear_table = None
+    else:
+        # Extract any additional special rules granted by wargear:
+        for ar in gang_wargear_table[gang_wargear_table["Additional Rules"].notna()]["Additional Rules"]:
+            for r in ar.split(","):
+                gang_rules.add(r.lower())
+    gang_specials_table = special_rules[special_rules["Rule"].str.lower().isin(gang_rules)]
+    if len(gang_specials_table) == 0:
+        gang_specials_table = None
 
     unknown_traits = [t for t in gang_weapon_traits if t not in list(weapon_traits['Trait Name'].str.lower())]
     unknown_skills = [s for s in gang_skills if s not in list(universal["Skill Name"].str.lower())
                       and s not in list(wyrd["Power Name"].str.lower())
                       and s not in list(wyrd["Combi Name"].str.lower())]
     unknown_wargear = [w for w in gang_wargear if w not in list(wargear["Wargear Name"].str.lower())]
-    unknown_special = [r for r in gang_rules if r not in ignore_rules]
+    unknown_special = [r for r in gang_rules if r not in ignore_rules and r not in list(special_rules["Rule"].str.lower())]
 
-    unknown_rules = unknown_traits + unknown_skills + unknown_wargear + unknown_special
-    if unknown_rules == []:
+    unknown_rules = set(unknown_traits + unknown_skills + unknown_wargear + unknown_special)
+    unknown_rules.discard('')
+    if unknown_rules == set():
         unknown_rules = None
-    return gang_name,gang_type,gang_skill_table,gang_wyrd_table,gang_trait_table,gang_wargear_table,unknown_rules
+    return gang_name,gang_type,gang_skill_table,gang_wyrd_table,gang_specials_table,gang_trait_table,gang_wargear_table,unknown_rules

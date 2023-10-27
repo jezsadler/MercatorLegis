@@ -96,8 +96,27 @@
         </tbody>
     </table>
     {% endif %}
-    {% if weapon_traits is defined %}
+    {% if gang_specials is not none %}
     <br>
+    <h3>Special Rules</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Special Rule</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in gang_specials.index %}
+            <tr>
+                <td>{{ gang_specials['Rule'][row] }}</td>
+                <td>{{ gang_specials['Description'][row] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    {% endif %}
+    {% if weapon_traits is defined %}
     <br>
     <h3>Weapon Traits</h3>
     <table>
@@ -121,13 +140,13 @@
     {% endif %}
     {% if wargear is defined %}
     <br>
-    <br>
     <h3>Wargear</h3>
     <table>
         <thead>
             <tr>
                 <th>Wargear Name</th>
                 <th>Wargear Description</th>
+                <th>Additional Rules</th>
             </tr>
         </thead>
         <tbody>
@@ -135,6 +154,8 @@
             <tr>
                 <td>{{ wargear['Wargear Name'][row] }}</td>
                 <td>{{ wargear['Description'][row] }}</td>
+                <td>{{ wargear['Additional Rules'][row] }}</td>
+
             </tr>
             {% endfor %}
         </tbody>
@@ -142,7 +163,7 @@
     {% else %}
     <h3>No wargear found.</h3>
     {% endif %}
-    {% if unknown_rules is defined %}
+    {% if unknown_rules is not none %}
     <br>
     <p>The following rules were found in the gang list, but not recognised:
     </p>
