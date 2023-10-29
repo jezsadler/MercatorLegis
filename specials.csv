@@ -14,3 +14,12 @@ Dervish,Extend LoS to 360° when making Fight (Basic) action with Versatile weap
 Berserk Charge,"When this fighter makes close combat attacks as part of a Charge (Double) action, they roll one additional Attack dice."
 Machine Madness,"All attacks have Reckless. After a target is Seriously Injured or taken Out of Action, roll 2+ or immediately gain Insanity."
 Valuable,"(Scrapcode-Corrupted Ambot): If Captured and not rescued, the capturing gang has the following options depending on alignment: Law Abiding: Sold as normal. Outlaw: Sold for full cost (Black Market). Added to the gang for free (if having sufficient Reputation to take an extra Hanger-on)."
+Pious,"Can re-roll Rally tests if the result is 2 (before modifiers)."
+Fanatical,Can re-roll Nerve tests if the result is 2 (before modifiers).
+Righteous Warrior,"Once per battle, can re-roll a Threshold test to perform an Act of Faith (all dice must be re-rolled)."
+Devout Masses (Ganger),"At the end of the Choose Crew step of the pre-battle sequence, one additional Ganger with this rule may be added to the starting crew, even if this increases the size of the gang beyond the scenario limit."
+Devout Masses (Juve),"At the end of the Choose Crew step of the pre-battle sequence, D3 additional Juves with this rule may be added to the starting crew, even if this increases the size of the gang beyond the scenario limit."
+The Path We Follow,This fighter must choose a Path of Faith when they are added to the gang. (see House of Faith pages 97-105)
+Vehicle Crew,This fighter must always be equipped with a vehicle.
+Rule of Iron,"When this fighter is activated, 1 visible Faction fighter within 6” gains the Nerves of Steel skill (if not already having it). +2 modifier to any Bottle test while at least one friendly fighter with this ability is on the battlefield."
+Poison Blood,Toxin weapons can re-roll 1s before modifiers (against Toughness).

@@ -31,8 +31,9 @@ def generate_gang_quickref(cardpath):
     # TODO: add wargear and other special rules.
     armour = pd.read_csv("armour.csv")
     equipment = pd.read_csv("personalequipment.csv")
+    genesmith = pd.read_csv("genesmith.csv")
 
-    wargear = pd.concat([armour,equipment])
+    wargear = pd.concat([armour,equipment,genesmith])
     wargear['Wargear Name'] = wargear['Wargear Name'].apply(capwords)
     wargear['Additional Rules'] = wargear['Additional Rules'].fillna('')
 
@@ -44,7 +45,9 @@ def generate_gang_quickref(cardpath):
                     "gang fighter (juve)","gang fighter (crew)","gang leader",
                     "fast learner","tools of the trade","promotion (specialist)", 
                     "promotion (champion)","psychoteric whispers",
-                    "infiltration"]
+                    "infiltration","vatborn","unborn agility","unborn brawn", 
+                    "unborn combat","unborn cunning","unborn ferocity","unborn shooting",
+                    "unborn savant"]
 
     # Open the cards file from YakTribe:
     if cardpath.startswith("https://yaktribe.games/underhive/gang/"):
