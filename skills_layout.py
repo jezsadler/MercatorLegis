@@ -144,8 +144,10 @@ def generate_gang_quickref(cardpath):
     unknown_skills = [s for s in gang_skills if s not in list(universal["Skill Name"].str.lower())
                       and s not in list(wyrd["Power Name"].str.lower())
                       and s not in list(wyrd["Combi Name"].str.lower())]
-    unknown_wargear = [w for w in gang_wargear if w not in list(wargear["Wargear Name"].str.lower())]
-    unknown_special = [r for r in gang_rules if r not in ignore_rules and r not in list(special_rules["Rule"].str.lower())]
+    unknown_wargear = [w for w in gang_wargear if w not in ignore_rules
+                       and w not in list(wargear["Wargear Name"].str.lower())]
+    unknown_special = [r for r in gang_rules if r not in ignore_rules 
+                       and r not in list(special_rules["Rule"].str.lower())]
 
     unknown_rules = set(unknown_traits + unknown_skills + unknown_wargear + unknown_special)
     unknown_rules.discard('')
