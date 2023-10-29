@@ -32,8 +32,9 @@ def generate_gang_quickref(cardpath):
     armour = pd.read_csv("armour.csv")
     equipment = pd.read_csv("personalequipment.csv")
     genesmith = pd.read_csv("genesmith.csv")
+    vehicles = pd.read_csv("vehicles.csv")
 
-    wargear = pd.concat([armour,equipment,genesmith])
+    wargear = pd.concat([armour,equipment,genesmith,vehicles])
     wargear['Wargear Name'] = wargear['Wargear Name'].apply(capwords)
     wargear['Additional Rules'] = wargear['Additional Rules'].fillna('')
 
