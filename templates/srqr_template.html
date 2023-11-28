@@ -60,8 +60,20 @@
                         <td>{{ gang_skills['Skill Name'][row] }}</td>
                         <td>{{ gang_skills['Skill Set'][row] }}</td>
                         <td>{{ gang_skills['Description'][row] }}
-                            {% if gang_skills['Action'][row] != 0 %}
-                                <blockquote>{{ gang_skills['Action'][row] }}</blockquote>
+                            {% if gang_skills['Actions'][row] is iterable %}
+                                {% for ability in gang_skills['Actions'][row] %}
+                                    <table>
+                                        <thead>
+                                            <th>{{ ability }}</th>
+                                            <th>{{ actions[actions['Action Name']==ability]['Action Type'].values[0] }}</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                            <td colspan="2">{{ actions[actions['Action Name']==ability]['Description'].values[0] }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                {% endfor %}
                             {% endif %}
                         </td>
                     </tr>
@@ -90,6 +102,21 @@
                     <td>{{ wyrd_powers['Discipline'][row] }}</td>
                     <td>{{ wyrd_powers['Action Type'][row] }}</td>
                     <td>{{ wyrd_powers['Description'][row] }}
+                        {% if wyrd_powers['Actions'][row] is iterable %}
+                                {% for ability in wyrd_powers['Actions'][row] %}
+                                    <table>
+                                        <thead>
+                                            <th>{{ ability }}</th>
+                                            <th>{{ actions[actions['Action Name']==ability]['Action Type'].values[0] }}</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                            <td colspan="2">{{ actions[actions['Action Name']==ability]['Description'].values[0] }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                {% endfor %}
+                            {% endif %}
                     </td>
                 </tr>
             {% endfor %}
@@ -110,7 +137,23 @@
             {% for row in gang_specials.index %}
             <tr>
                 <td>{{ gang_specials['Rule'][row] }}</td>
-                <td>{{ gang_specials['Description'][row] }}</td>
+                <td>{{ gang_specials['Description'][row] }}
+                    {% if gang_specials['Actions'][row] is iterable %}
+                                {% for ability in gang_specials['Actions'][row] %}
+                                    <table>
+                                        <thead>
+                                            <th>{{ ability }}</th>
+                                            <th>{{ actions[actions['Action Name']==ability]['Action Type'].values[0] }}</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                            <td colspan="2">{{ actions[actions['Action Name']==ability]['Description'].values[0] }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                {% endfor %}
+                            {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>
@@ -130,7 +173,23 @@
             {% for row in weapon_traits.index %}
             <tr>
                 <td>{{ weapon_traits['Trait Name'][row] }}</td>
-                <td>{{ weapon_traits['Description'][row] }}</td>
+                <td>{{ weapon_traits['Description'][row] }}
+                    {% if weapon_traits['Actions'][row] is iterable %}
+                                {% for ability in weapon_traits['Actions'][row] %}
+                                    <table>
+                                        <thead>
+                                            <th>{{ ability }}</th>
+                                            <th>{{ actions[actions['Action Name']==ability]['Action Type'].values[0] }}</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                            <td colspan="2">{{ actions[actions['Action Name']==ability]['Description'].values[0] }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                {% endfor %}
+                            {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>
@@ -153,8 +212,34 @@
             {% for row in wargear.index %}
             <tr>
                 <td>{{ wargear['Wargear Name'][row] }}</td>
-                <td>{{ wargear['Description'][row] }}</td>
-                <td>{{ wargear['Additional Rules'][row] }}</td>
+                <td>{{ wargear['Description'][row] }}
+                    {% if wargear['Actions'][row] is iterable %}
+                                {% for ability in wargear['Actions'][row] %}
+                                    <table>
+                                        <thead>
+                                            <th>{{ ability }}</th>
+                                            <th>{{ actions[actions['Action Name']==ability]['Action Type'].values[0] }}</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                            <td colspan="2">{{ actions[actions['Action Name']==ability]['Description'].values[0] }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                {% endfor %}
+                            {% endif %}
+                </td>
+                <td>{% if wargear['Additional Rules'][row] is mapping %}
+                    {% for k in wargear['Additional Rules'][row].keys() %}
+                        {% if k != 'Actions' %}
+                            {{ k }}:
+                            {% for v in wargear['Additional Rules'][row][k] %}
+                                {{ v }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                </td>
 
             </tr>
             {% endfor %}

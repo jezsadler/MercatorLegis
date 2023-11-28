@@ -15,14 +15,14 @@ def generate_gang_quickref(cardpath):
     # Load in the gang skills:
     universal = pd.read_csv("universalskills.csv")
     universal['Skill Set'] = universal['Skill Set'].apply(capwords)
+    universal['Skill Name'] = universal['Skill Name'].apply(capwords)
     universal['Skill Name'] = universal['Skill Name'].str.replace('\u200b','')
  
     #Load in Wyrd Powers:
     wyrd = pd.read_csv("wyrdpowers.csv")
     wyrd["Combi Name"] = wyrd["Discipline"] + " - " + wyrd["Power Name"]
 
-    actions =  universal['Action'].fillna(0)
-    universal['Action'] = actions
+    actions =  pd.read_csv("actions.csv")
 
     # Load in the weapon traits:
     weapon_traits = pd.read_csv("weapontraits.csv")
@@ -34,9 +34,9 @@ def generate_gang_quickref(cardpath):
     genesmith = pd.read_csv("genesmith.csv")
     vehicles = pd.read_csv("vehicles.csv")
 
-    wargear = pd.concat([armour,equipment,genesmith,vehicles])
+    wargear = pd.concat([armour,equipment,genesmith,vehicles],ignore_index=True)
     wargear['Wargear Name'] = wargear['Wargear Name'].apply(capwords)
-    wargear['Additional Rules'] = wargear['Additional Rules'].fillna('')
+    # wargear['Additional Rules'] = wargear['Additional Rules'].fillna('')
 
     special_rules = pd.read_csv("specials.csv")
 
@@ -48,7 +48,7 @@ def generate_gang_quickref(cardpath):
                     "promotion (champion)","psychoteric whispers",
                     "infiltration","vatborn","unborn agility","unborn brawn", 
                     "unborn combat","unborn cunning","unborn ferocity","unborn shooting",
-                    "unborn savant"]
+                    "unborn savant","fresh from the academy",]
 
     # Open the cards file from YakTribe:
     if cardpath.startswith("https://yaktribe.games/underhive/gang/"):
@@ -86,7 +86,7 @@ def generate_gang_quickref(cardpath):
 
     gang_weapon_traits = set([t.lower() for t in gang_weapon_traits if '(' not in t] + x_traits)
 
-    # Now parse the card sections after the weapon table, for 
+    # Now parse the card sections after the weapon table, for
     # wargear, skills, and special rules.
     non_weapons = soup.find_all("table","table table-sm mb-1")
 
@@ -110,7 +110,7 @@ def generate_gang_quickref(cardpath):
     gang_wargear = {gear.lower() for gear in gang_wargear if gear != ''}
     gang_skills = {skill.lower() for skill in gang_skills if skill != ''}
     gang_rules = {rule.lower() for rule in gang_rules if rule != ''}
-
+    
     # Group activation skills are a bit fiddly - 
     groupacts = {r for r in gang_rules if r.startswith("group activation") 
                  and r != "group activation (exotic beasts)"}
@@ -118,7 +118,86 @@ def generate_gang_quickref(cardpath):
                  or r == "group activation (exotic beasts)"}
     if len(groupacts) >= 1:
         gang_rules.add("group activation (x)")
-    
+    # Actions are only granted by other rules, not listed directly.
+    gang_actions = set()
+
+    # Get additional rules granted by written rules.
+    check_traits = gang_weapon_traits
+    check_skills = gang_skills
+    check_wargear = gang_wargear
+    check_rules = gang_rules
+    while(
+        len(check_traits) +
+        len(check_skills) +
+        len(check_wargear) +
+        len(check_rules) > 0):
+     
+        additional = {}
+        add_from_traits = weapon_traits[
+            weapon_traits['Trait Name'].str.lower().isin(check_traits)
+            & weapon_traits['Additional Rules'].notna()]
+        add_from_skills = universal[
+            universal["Skill Name"].str.lower().isin(check_skills)
+            & universal['Additional Rules'].notna()]['Additional Rules']
+        add_from_wyrd = wyrd[
+            (wyrd["Power Name"].str.lower().isin(check_skills) |
+            wyrd["Combi Name"].str.lower().isin(check_skills))
+            & wyrd['Additional Rules'].notna()]['Additional Rules']
+        add_from_wargear = wargear[
+            wargear["Wargear Name"].str.lower().isin(check_wargear)
+            & wargear['Additional Rules'].notna()]['Additional Rules']
+        add_from_specials = special_rules[
+            special_rules["Rule"].str.lower().isin(check_rules)
+            & special_rules['Additional Rules'].notna()]['Additional Rules']
+        for add_rules in [add_from_traits,
+                        add_from_skills,
+                        add_from_wyrd,
+                        add_from_wargear,
+                        add_from_specials,]:
+            if len(add_rules) > 0:
+                for ar in add_rules:
+                    for k,v in eval(ar).items():
+                        if k in additional:
+                            for i in v:
+                                additional[k].add(i.lower())
+                        else:
+                            additional[k] = {i.lower() for i in v}
+        if 'Actions' in additional.keys():
+            gang_actions = gang_actions.union(additional['Actions'])
+        if 'Weapon Traits' in additional.keys():
+            check_traits = {
+                trait for trait in additional['Weapon Traits']
+                if trait not in gang_weapon_traits}
+            gang_weapon_traits = gang_weapon_traits.union(gang_weapon_traits)
+        else:
+            check_traits = {}
+        if 'Special Rules' in additional.keys():
+            check_rules = {
+                rule for rule in additional['Special Rules']
+                if rule not in gang_rules}
+            gang_rules = gang_rules.union(check_rules)
+        else:
+            check_rules = {}
+        if 'Skills' in additional.keys():
+            check_skills = {
+                skill for skill in additional['Skills']
+                if skill not in gang_skills}
+            gang_skills = gang_skills.union(check_skills)
+        else:
+            check_skills = {}
+        if 'Wyrd Powers' in additional.keys():
+            check_powers = {
+                power for power in additional['Wyrd Powers']
+                if power not in gang_skills}
+            check_skills = check_skills.union(check_powers)
+            gang_skills = gang_skills.union(check_powers)
+        if 'Wargear' in additional.keys():
+            check_wargear = {gear for gear in additional['Wargear']
+                           if gear not in gang_wargear}
+            gang_wargear = gang_wargear.union(check_wargear)
+        else:
+            check_wargear = {}
+
 
     # Filter the big tables to what this gang needs.
     gang_trait_table = weapon_traits[weapon_traits['Trait Name'].str.lower().isin(gang_weapon_traits)]
@@ -126,17 +205,34 @@ def generate_gang_quickref(cardpath):
 
     gang_wyrd_table = wyrd[wyrd["Power Name"].str.lower().isin(gang_skills) |
                            wyrd["Combi Name"].str.lower().isin(gang_skills)]
+
+    gang_wargear_table = wargear[wargear["Wargear Name"].str.lower().isin(gang_wargear)]
+    gang_specials_table = special_rules[special_rules["Rule"].str.lower().isin(gang_rules)]
+
+    for table in [gang_trait_table,gang_skill_table,gang_wyrd_table,gang_wargear_table,gang_specials_table]:
+        filled = table["Additional Rules"].fillna("{'Actions':None}")
+        action_list = []
+        for row in filled.apply(eval):
+            if 'Actions' in row.keys():
+                action_list.append(row['Actions'])
+            else:
+                action_list.append(None)
+        table.insert(len(table.columns),"Actions",pd.Series(action_list,index=table.index,name="Actions"))
+
+    add_rules_as_dicts = []
+    for add_rule in gang_wargear_table["Additional Rules"]:
+        if isinstance(add_rule,str):
+            add_rules_as_dicts.append(eval(add_rule))
+        else:
+            add_rules_as_dicts.append(None)
+    gang_wargear_table.loc[:,"Additional Rules"] = pd.Series(add_rules_as_dicts,index=gang_wargear_table.index)
+
+    gang_actions_table = actions[actions["Action Name"].str.lower().isin(gang_actions)]
+    # Hide Wyrd Powers, Wargear, Special rules tables if they're empty.
     if len(gang_wyrd_table) == 0:
         gang_wyrd_table = None
-    gang_wargear_table = wargear[wargear["Wargear Name"].str.lower().isin(gang_wargear)]
     if len(gang_wargear_table) == 0:
         gang_wargear_table = None
-    else:
-        # Extract any additional special rules granted by wargear:
-        for ar in gang_wargear_table[gang_wargear_table["Additional Rules"].notna()]["Additional Rules"]:
-            for r in ar.split(","):
-                gang_rules.add(r.lower())
-    gang_specials_table = special_rules[special_rules["Rule"].str.lower().isin(gang_rules)]
     if len(gang_specials_table) == 0:
         gang_specials_table = None
 
@@ -153,4 +249,4 @@ def generate_gang_quickref(cardpath):
     unknown_rules.discard('')
     if unknown_rules == set():
         unknown_rules = None
-    return gang_name,gang_type,gang_skill_table,gang_wyrd_table,gang_specials_table,gang_trait_table,gang_wargear_table,unknown_rules
+    return gang_name,gang_type,gang_skill_table,gang_wyrd_table,gang_specials_table,gang_trait_table,gang_wargear_table,gang_actions_table,unknown_rules

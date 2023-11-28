@@ -12,7 +12,7 @@ def selector():
 
 @app.route("/quickref_sheet.html",methods = ['GET','POST'])
 def qr_sheet():
-    gang_name,gang_type,gang_skills,wyrd,specials,weapon_traits,wargear,unknown_rules = generate_gang_quickref(request.args['gangpath'])
+    gang_name,gang_type,gang_skills,wyrd,specials,weapon_traits,wargear,actions,unknown_rules = generate_gang_quickref(request.args['gangpath'])
     return render_template("srqr_template.html",
                            gang_name=gang_name,
                            gang_type=gang_type,
@@ -21,4 +21,5 @@ def qr_sheet():
                            gang_specials=specials,
                            weapon_traits=weapon_traits,
                            wargear=wargear,
+                           actions=actions,
                            unknown_rules=unknown_rules)

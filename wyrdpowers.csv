@@ -1,4 +1,4 @@
-Discipline,Power Name,Action Type,Description
+Discipline,Power Name,Action Type,Description,Additional Rules
 Biomancy,Arachnosis,"Basic, Continuous","While this Wyrd Power is maintained, the fighter counts as having the Clamber, Catfall and Mighty Leap skills."
 Biomancy,Cause Pain,Basic,"Choose an enemy fighter that has already lost at least one Wound or suffered at least one Flesh Wound and that is within 18"" and line of sight of this fighter. That fighter must roll an Injury dice and immediately apply the effects."
 Biomancy,Chameleon,"Basic, Continuous","While this Wyrd Power is maintained, ranged attacks targeting this fighter suffer a -2 modifier to their hit roll, provided the fighter does not move during their activation."
