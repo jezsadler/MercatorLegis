@@ -9,7 +9,6 @@ app.secret_key = 'zenith'
 with open('static/email.config') as emailfile:
     mail_config = {s.split(',')[0]:s.split(',')[1].strip()
                    for s in emailfile.readlines()}
-print(mail_config)    
 mail = Mail()
 app.config["MAIL_SERVER"] = mail_config['mail_server']
 app.config["MAIL_PORT"] = int(mail_config['mail_port'])
@@ -39,16 +38,14 @@ def selector():
 def contact():
     form = ContactForm()
     if request.method == 'POST':
-        if form.validate() == False:
-            flash('All fields are required.')
-            return render_template('srqr_contact.html', form=form)
-        else:
+        if form.validate_on_submit():
             msg = Message("SRQR Feedback: " + form.subject.data, 
                           sender=form.email.data, 
                           recipients=[mail_config['mail_recipient']])
             msg.body = """ 
             From: %s <%s> 
             %s """ % (form.name.data, form.email.data, form.message.data)
+            redirect('/')
             mail.send(msg)
             flash('Message sent.')
             return redirect('/')

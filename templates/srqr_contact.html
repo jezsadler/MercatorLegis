@@ -13,7 +13,7 @@
     <h2>Contact</h2>
     <p>If you have any issues, requests, or other feedback on this tool, please use this 
         form to let me know.</p>
-        <form class="contact" action="{{ url_for('contact') }}" method=post>
+        <form class="contact" action="{{ url_for('contact') }}" method=post onsubmit="disableSubmit(this)">
             {{ form.hidden_tag() }}
             {{ form.name.label }}
             {{ form.name }}
@@ -26,3 +26,10 @@
             {{ form.submit }}
         </form>
 </body>
+<script type="text/javascript">
+    function disableSubmit(form) {
+        form.submit.disabled = true;
+        form.submit.value = "Sending...";
+        return true;
+    }
+</script>
