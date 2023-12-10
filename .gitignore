@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 cards.html
 helotscards.html
+static/email.config

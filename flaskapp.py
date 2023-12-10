@@ -6,12 +6,16 @@ from contact import ContactForm
 app = Flask(__name__)
 app.secret_key = 'zenith'
 
+with open('static/email.config') as emailfile:
+    mail_config = {s.split(',')[0]:s.split(',')[1].strip
+                   for s in emailfile.readlines()}
+    
 mail = Mail()
-app.config["MAIL_SERVER"] = "smtp.gmail.com"
-app.config["MAIL_PORT"] = 465
-app.config["MAIL_USE_SSL"] = True
-app.config["MAIL_USERNAME"] = 'contactymerge@gmail.com'
-app.config["MAIL_PASSWORD"] = 'mnbk rwhl mdnl mrzz'
+app.config["MAIL_SERVER"] = mail_config['mail_server']
+app.config["MAIL_PORT"] = mail_config['mail_port']
+app.config["MAIL_USE_SSL"] = mail_config['mail_use_ssl']
+app.config["MAIL_USERNAME"] = mail_config['mail_username']
+app.config["MAIL_PASSWORD"] = mail_config['mail_password']
 mail.init_app(app)
 
 @app.route("/",methods = ['GET','POST'])
