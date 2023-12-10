@@ -2,47 +2,15 @@
 <head>
     <meta charset="utf-8">
     <title>Gang Special Rules</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Anton:400,700|Open+Sans:400,600,600italic,700">
-
-    <style>
-        h1 {
-            font-size: 64pt;
-        }
-        h1,h2 {text-align: center;}
-        h1,h2,h3,h4,h5,h6 {
-            font-family: "Anton", cursive;
-            font-weight: 400;
-            font-style: normal;
-            letter-spacing: 1px;
-            color: brown;
-            text-rendering: optimizeLegibility;
-            margin-top: 0;
-            margin-bottom: 0.5rem;
-            line-height: 1.4;
-            text-transform: uppercase;
-        }
-        
-        th {
-            background-color: darkslategray;
-            color: cornsilk;}
-        td {
-            border-color: brown;
-            border-bottom: 1px solid;
-        }
-        tr:nth-child(even) {
-            background-color:cornsilk;
-        }
-
-        blockquote {
-            background-color: burlywood;
-            border: 1px solid;
-            box-shadow: 2px 2px brown;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>{{ gang_name }}</h1>
-    <h2>{{ gang_type }}</h2>
+    {% if orient == 'portrait' %}
+        <h1>{{ gang_name }}</h1>
+        <h2>{{ gang_type }}</h2>
+    {% else %}
+        <h1>{{ gang_name }} - {{ gang_type }}</h1>
+    {% endif %}
     <h2>Special Rules Quick Reference</h2>
     {% if gang_skills is defined %}
         <h3>Gang Skills</h3>
@@ -248,11 +216,21 @@
     {% else %}
     <h3>No wargear found.</h3>
     {% endif %}
-    {% if unknown_rules is not none %}
-    <br>
-    <p>The following rules were found in the gang list, but not recognised:
-    </p>
-    <p>{{ unknown_rules }}</p>
+    {% if hide_unknown == 'False' %}
+        {% if unknown_rules is not none %}
+        <br>
+        <p>The following rules were found in the gang list, but not recognised:
+        </p>
+        <p>{{ unknown_rules }}</p>
+        {% endif %}
+    {% endif %}
+    {% if hide_ooc == 'False' %}
+        {% if ignore_gang is not none %}
+        <br>
+        <p>The following rules were found in the gang list, but are only used outside of games:
+        </p>
+        <p>{{ ignore_gang }}</p>
+        {% endif %}
     {% endif %}
     </body>
     </html>

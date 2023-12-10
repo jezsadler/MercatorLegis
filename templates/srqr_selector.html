@@ -2,55 +2,59 @@
 <head>
     <meta charset="utf-8">
     <title>Gang Special Rules</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Anton:400,700|Open+Sans:400,600,600italic,700">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
-        h1 {
-            font-size: 64pt;
-        }
-        h1,h2,h4 {text-align: center;}
-        h1,h2,h3,h4,h5,h6 {
-            font-family: "Anton", cursive;
-            font-weight: 400;
-            font-style: normal;
-            letter-spacing: 1px;
-            color: brown;
-            text-rendering: optimizeLegibility;
-            margin-top: 0;
-            margin-bottom: 0.5rem;
-            line-height: 1.4;
-            text-transform: uppercase;
-        }
-        
-        th {
-            background-color: darkslategray;
-            color: cornsilk;}
-        td {
-            border-color: brown;
-            border-bottom: 1px solid;
-        }
-        tr:nth-child(even) {
-            background-color:cornsilk;
-        }
-
-        blockquote {
-            background-color: burlywood;
-            border: 1px solid;
-            box-shadow: 2px 2px brown;
-        }
         body {
             background-color: cornsilk;
         }
     </style>
 </head>
 <body>
+
     <h2>Necromunda Special Rules Quick Reference Generator</h2>
     <h4>by RemySparks</h4>
-    <form method="post">
-        <label for="gangpath">Yaktribe URL:</label>
-        <input name="gangpath" id="gangpath" type="url" size="50" value = "https://yaktribe.games/underhive/gang/" required>
-        <input type="submit" formtarget = "_self" value="Gather Special Rules">
-    </form>
+        {% with messages = get_flashed_messages() %}
+        <ul class=flashes>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endwith %}
+        <form method="post">
+            <label for="gangpath">Yaktribe URL:</label>
+            <input name="gangpath" id="gangpath" type="url" size="50" value = "https://yaktribe.games/underhive/gang/" required>
+            <input type="submit" formtarget = "_self" value="Gather Special Rules">
+            <table style="margin-left: 5%;">
+                <tr>
+                    <td style="border-style:hidden">
+                        <label for="portrait">Portrait:</label>
+                    </td>
+                    <td style="border-style:hidden">
+                        <input name="orientation" id="portrait" value="portrait" type="radio" checked>
+                    </td>
+                    <td style="border-style:hidden;">
+                        <label for="hideunrecognized">Hide unrecognized keywords:</label>
+                    </td>
+                    <td style="border-style:hidden">
+                        <input name="hideunrecognized" id="hideunrecognized" type="checkbox">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-style:hidden">
+                        <label for="landscape">Landscape:</label>
+                    </td>
+                    <td style="border-style:hidden">
+                        <input name="orientation" id="landscape" value="landscape" type="radio">
+                    </td>
+                    <td style="border-style:hidden;">
+                        <label for="hideooc">Hide keywords only used outside of games:</label>
+                    </td>
+                    <td style="border-style:hidden">
+                        <input name="hideooc" id="hideooc" type="checkbox" checked>
+                    </td>
+                </tr>
+            </table>
+        </form>
     <p>This web tool aims to make Necromunda slightly more playable by 
         collecting together the various rules needed for a specific gang
         and presenting them on a few pages, rather than scattered over 
@@ -79,17 +83,9 @@
         <li>Van Saar Cyberteknika and Escher Chem-Alchemy</li>
         <li>Other special rules</li>
     </ul>
-    <p>For most keywords that aren't currently included, you'll see a list at the 
-        bottom of the page. This is to let you know what's missing, and to let me 
-        know what I need to add.
-    </p>
-    <p>If a keyword is on your fighter cards, but doesn't show up either in the
-        table or in the list of unrecognized skills, it is probably a skill that 
-        doesn't come into play during games. There is no intent to support these.</p>
     <hr></hr>
     <p>Please let me know if you have any issues. You can contact me
-        through my YakTribe profile (RemySparks) or via a Necromunda
-        community group.
+        <a href="{{url_for('contact')}}">here</a>.
     </p>
     <p>This tool is provided free for community use, but there are 
         some small hosting costs, as well as my time to improve and 

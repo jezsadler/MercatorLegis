@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css?family=Anton:400,700|Open+Sans:400,600,600italic,700');
+
+h1 {
+    font-size: 5vw;
+}
+h1,h2,h4 {text-align: center;}
+h1,h2,h3,h4,h5,h6 {
+    font-family: "Anton", cursive;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: 1px;
+    color: brown;
+    text-rendering: optimizeLegibility;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+    text-transform: uppercase;
+}
+
+th {
+    background-color: darkslategray;
+    color: cornsilk;}
+td {
+    border-color: brown;
+    border-bottom: 1px solid;
+}
+tr:nth-child(even) {
+    background-color:cornsilk;
+}
+
+blockquote {
+    background-color: burlywood;
+    border: 1px solid;
+    box-shadow: 2px 2px brown;
+}
+
+form.contact label {
+    /* font-size: 1.2em;
+    font-weight: bold; */
+    display: block;
+    padding: 10px 0;
+  }
+  form input#name,
+  form input#email,
+  form input#subject {
+    width: 400px;
+    background-color: #fafafa;
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+            border-radius: 3px;
+    border: 1px solid #cccccc;
+    padding: 5px;
+    font-size: 1.1em;
+  }
+  form textarea#message {
+    width: 500px;
+    height: 100px;
+    background-color: #fafafa;
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+            border-radius: 3px;
+    border: 1px solid #cccccc;
+    margin-bottom: 10px;
+    padding: 5px;
+    font-size: 1.1em;
+  }
+  form.contact input#submit {
+    display: block;
+    -webkit-border-radius: 3px; 
+       -moz-border-radius: 3px;
+            border-radius: 3px;
+    border:1px solid #d8d8d8;
+    padding: 10px; 
+    font-weight:bold; 
+    text-align: center; 
+    color: #000000; 
+    background-color: #f4f4f4;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f4f4f4), color-stop(100%, #e5e5e5));
+    background-image: -webkit-linear-gradient(top, #f4f4f4, #e5e5e5);
+    background-image: -moz-linear-gradient(top, #f4f4f4, #e5e5e5);
+    background-image: -ms-linear-gradient(top, #f4f4f4, #e5e5e5);
+    background-image: -o-linear-gradient(top, #f4f4f4, #e5e5e5);
+    background-image: linear-gradient(top, #f4f4f4, #e5e5e5);filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#f4f4f4, endColorstr=#e5e5e5);
+  }
+  form.contact input#submit:hover{
+    cursor: pointer;
+    border:1px solid #c1c1c1; 
+    background-color: #dbdbdb;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#dbdbdb), color-stop(100%, #cccccc));
+    background-image: -webkit-linear-gradient(top, #dbdbdb, #cccccc);
+    background-image: -moz-linear-gradient(top, #dbdbdb, #cccccc);
+    background-image: -ms-linear-gradient(top, #dbdbdb, #cccccc);
+    background-image: -o-linear-gradient(top, #dbdbdb, #cccccc);
+    background-image: linear-gradient(top, #dbdbdb, #cccccc);filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#dbdbdb, endColorstr=#cccccc);
+  }

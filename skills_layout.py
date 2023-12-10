@@ -51,16 +51,17 @@ def generate_gang_quickref(cardpath):
                     "unborn savant","fresh from the academy",]
 
     # Open the cards file from YakTribe:
-    if cardpath.startswith("https://yaktribe.games/underhive/gang/"):
+    if cardpath.startswith("https://yaktribe.games/underhive/print/cards"):
+        with urllib.request.urlopen(cardpath) as fp:
+            soup = BeautifulSoup(fp, 'html.parser')
+    elif cardpath.startswith("LOCAL:"):
+        cardfile = cardpath.split(":")[1]
+        with open(cardfile) as fp:
+            soup = BeautifulSoup(fp, 'html.parser')
+    else:
         gang_id = re.findall("(\d+)(?!.*\d)",cardpath)[0]
         cardpath = "https://yaktribe.games/underhive/print/cards/" + gang_id
         with urllib.request.urlopen(cardpath) as fp:
-            soup = BeautifulSoup(fp, 'html.parser')
-    elif cardpath.startswith("https://yaktribe.games/underhive/print/cards"):
-        with urllib.request.urlopen(cardpath) as fp:
-            soup = BeautifulSoup(fp, 'html.parser')
-    else:
-        with open(cardpath) as fp:
             soup = BeautifulSoup(fp, 'html.parser')
 
     # Get the gang name:
@@ -244,9 +245,16 @@ def generate_gang_quickref(cardpath):
                        and w not in list(wargear["Wargear Name"].str.lower())]
     unknown_special = [r for r in gang_rules if r not in ignore_rules 
                        and r not in list(special_rules["Rule"].str.lower())]
+    ignore_wargear = [w for w in gang_wargear if w in ignore_rules]
+    ignore_special = [r for r in gang_rules if r in ignore_rules]
 
     unknown_rules = set(unknown_traits + unknown_skills + unknown_wargear + unknown_special)
     unknown_rules.discard('')
     if unknown_rules == set():
         unknown_rules = None
-    return gang_name,gang_type,gang_skill_table,gang_wyrd_table,gang_specials_table,gang_trait_table,gang_wargear_table,gang_actions_table,unknown_rules
+
+    ignore_gang = set(ignore_wargear + ignore_special)
+    if ignore_gang == set():
+        ignore_gang = None
+
+    return gang_name,gang_type,gang_skill_table,gang_wyrd_table,gang_specials_table,gang_trait_table,gang_wargear_table,gang_actions_table,unknown_rules,ignore_gang

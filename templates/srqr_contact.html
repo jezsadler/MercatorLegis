@@ -1,0 +1,28 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Contact</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            background-color: cornsilk;
+        }
+    </style>
+</head>
+<body>
+    <h2>Contact</h2>
+    <p>If you have any issues, requests, or other feedback on this tool, please use this 
+        form to let me know.</p>
+        <form class="contact" action="{{ url_for('contact') }}" method=post>
+            {{ form.hidden_tag() }}
+            {{ form.name.label }}
+            {{ form.name }}
+            {{ form.email.label }}
+            {{ form.email }}
+            {{ form.subject.label }}
+            {{ form.subject }}
+            {{ form.message.label }}
+            {{ form.message }}
+            {{ form.submit }}
+        </form>
+</body>
