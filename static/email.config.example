@@ -3,3 +3,4 @@ mail_port,465
 mail_use_ssl,True
 mail_username,contact@provider.com
 mail_password,app_passkey
+mail_recipient,support@provider.com

@@ -7,13 +7,13 @@ app = Flask(__name__)
 app.secret_key = 'zenith'
 
 with open('static/email.config') as emailfile:
-    mail_config = {s.split(',')[0]:s.split(',')[1].strip
+    mail_config = {s.split(',')[0]:s.split(',')[1].strip()
                    for s in emailfile.readlines()}
-    
+print(mail_config)    
 mail = Mail()
 app.config["MAIL_SERVER"] = mail_config['mail_server']
-app.config["MAIL_PORT"] = mail_config['mail_port']
-app.config["MAIL_USE_SSL"] = mail_config['mail_use_ssl']
+app.config["MAIL_PORT"] = int(mail_config['mail_port'])
+app.config["MAIL_USE_SSL"] = bool(mail_config['mail_use_ssl'])
 app.config["MAIL_USERNAME"] = mail_config['mail_username']
 app.config["MAIL_PASSWORD"] = mail_config['mail_password']
 mail.init_app(app)
@@ -44,13 +44,14 @@ def contact():
             return render_template('srqr_contact.html', form=form)
         else:
             msg = Message("SRQR Feedback: " + form.subject.data, 
-                          sender='contactymerge@gmail.com', 
-                          recipients=['jez.sadler@gmail.com'])
+                          sender=form.email.data, 
+                          recipients=[mail_config['mail_recipient']])
             msg.body = """ 
             From: %s <%s> 
             %s """ % (form.name.data, form.email.data, form.message.data)
             mail.send(msg)
-            return 'Form posted.'
+            flash('Message sent.')
+            return redirect('/')
     elif request.method == 'GET':
         return render_template('srqr_contact.html', form=form)
 
