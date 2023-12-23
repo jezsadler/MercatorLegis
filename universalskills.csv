@@ -9,7 +9,7 @@ BRAWN​,Bull Charge​,"When the fighter makes close combat attacks as part of 
 BRAWN​,Bulging Biceps​,This fighter may wield an Unwieldy weapon in one hand rather than the usual two. Note that Unwieldy weapons still take up the space of two weapons with regards to how many a fighter may carry.,
 BRAWN​,Crushing Blow​,"Before rolling to hit for the fighter’s close combat attacks, the controlling player can nominate one dice to make a Crushing Blow. This cannot be a dice that is rolling for a weapon with the Sidearm trait. If that dice hits, the attack’s Strength and Damage are increased by one.",
 BRAWN​,Headbutt​,"If the fighter is Standing and Engaged, they can make the Headbutt (Free) action.","{'Actions':{'Headbutt'}}" 
-BRAWN​,Hurl​,"If the fighter is Standing and Engaged, they can perform the Hurl (Basic) action:","{'Actions':{'Hurl'}}"
+BRAWN​,Hurl​,"If the fighter is Standing and Engaged, they can perform the Hurl (Basic) action. This action can also be performed for free after successfully performing a Charge (Double) action instead of a free Fight (Basic) action.","{'Actions':{'Hurl'}}"
 BRAWN​,Iron Jaw​,This fighter’s Toughness is treated as being two higher than normal when another fighter attacks them in close combat with a weapon with an AP characteristic of -.,
 COMBAT​,Combat Master​,"The fighter never suffers penalties to their hit rolls for interference, and can always grant assists, regardless of how many enemy fighters they are engaged with.",
 COMBAT​,Counter-Attack​,"When this fighter makes Reaction attacks in close combat, they roll one additional Attack dice for each of the attacker’s Attacks that failed to hit (whether they missed, were parried, etc).",

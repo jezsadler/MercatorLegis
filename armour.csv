@@ -24,5 +24,5 @@ DISPLACER FIELD,"For each hit a fighter wearing a displacer field suffers, roll 
 REFRACTOR FIELD,"When a fighter wearing a refractor field is hit by an attack, roll a D6. On a 5+, the hit is ignored. However, should the field work and the hit be ignored, roll another D6. If the result is a 1, then the field has been overburdened by the attack and its generator is burned out. Remove the refractor field from the fighter’s card – it no longer works.",
 Butcher's Mask,"6+ save (unmodifiable by AP). Can't be improved by other armour.","{'Special Rules' : {'Terrifying'}}"
 Cutter's Mask,"+1 save modifier. Roll a 6+ when suffering a Head Injury and Eye Injury (Lasting Injuries 51-52) to change it into a Grievous Injury (Into Recovery).","{'Special Rules' : {'Terrifying'}}"
-Skinner's Mask,"+1 save modifier. Roll a 6+ when suffering a Head Injury and Eye Injury (Lasting Injuries 51-52) to change it into a Grievous Injury (Into Recovery).","{'Special Rules' : {'Fearsome'}}"
+Skinner's Mask,"+1 save modifier. Roll a 6+ when suffering a Head Injury and Eye Injury (Lasting Injuries 51-52) to change it into a Grievous Injury (Into Recovery).","{'Skills':{'Fearsome'}}"
 Initiate's Mask,"+1 save modifier. Roll a 6+ when suffering a Head Injury and Eye Injury (Lasting Injuries 51-52) to change it into a Grievous Injury (Into Recovery).",

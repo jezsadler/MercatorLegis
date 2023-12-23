@@ -1,11 +1,9 @@
-import pandas as pd
-import html
 import urllib.request
 import re
 from string import capwords
+import pandas as pd
 
 from bs4 import BeautifulSoup, Tag
-from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
 def generate_gang_quickref(cardpath):
@@ -17,7 +15,7 @@ def generate_gang_quickref(cardpath):
     universal['Skill Set'] = universal['Skill Set'].apply(capwords)
     universal['Skill Name'] = universal['Skill Name'].apply(capwords)
     universal['Skill Name'] = universal['Skill Name'].str.replace('\u200b','')
- 
+
     #Load in Wyrd Powers:
     wyrd = pd.read_csv("wyrdpowers.csv")
     wyrd["Combi Name"] = wyrd["Discipline"] + " - " + wyrd["Power Name"]
@@ -28,27 +26,47 @@ def generate_gang_quickref(cardpath):
     weapon_traits = pd.read_csv("weapontraits.csv")
     weapon_traits['Trait Name'] = weapon_traits['Trait Name'].apply(capwords)
 
-    # TODO: add wargear and other special rules.
+    # Load in wargear and other special rules.
+    ammo = pd.read_csv("ammo.csv")
     armour = pd.read_csv("armour.csv")
+    bionics = pd.read_csv("bionics.csv")
+    chems = pd.read_csv("chems.csv")
     equipment = pd.read_csv("personalequipment.csv")
     genesmith = pd.read_csv("genesmith.csv")
     vehicles = pd.read_csv("vehicles.csv")
 
-    wargear = pd.concat([armour,equipment,genesmith,vehicles],ignore_index=True)
+    wargear = pd.concat(
+        [ammo,armour,bionics,chems,equipment,genesmith,vehicles],
+        ignore_index=True
+    )
     wargear['Wargear Name'] = wargear['Wargear Name'].apply(capwords)
     # wargear['Additional Rules'] = wargear['Additional Rules'].fillna('')
 
     special_rules = pd.read_csv("specials.csv")
 
-    # These rules impact things outside of the battle, so don't need to
+    # These rules impact things outside of the battle, or are already 
+    # incorporated into fighter stats, so don't need to
     # be on the quick reference.
     ignore_rules = ["gang fighter (ganger)","gang fighter (prospect)",
                     "gang fighter (juve)","gang fighter (crew)","gang leader",
                     "fast learner","tools of the trade","promotion (specialist)", 
                     "promotion (champion)","psychoteric whispers",
-                    "infiltration","vatborn","unborn agility","unborn brawn", 
+                    "infiltration","master of cyberteknika","fresh from the academy",
+                    "forged guilder seal","mnemonic inload spike","opulent jewellery"
+
+                    # Genesmithing
+                    "vatborn","unborn agility","unborn brawn", 
                     "unborn combat","unborn cunning","unborn ferocity","unborn shooting",
-                    "unborn savant","fresh from the academy",]
+                    "unborn savant",
+                    # Bionics 
+                    "lobo chip (mundane cl)","lobo chip (mundane ld)","lobo chip (improved)",
+                    "cortex-cogitator (mundane int)","cortex-cogitator (mundane will)",
+                    "cortex-cogitator (improved)","bionic eye (mundane)",
+                    "bionic arm (mundane)","bionic leg (mundane)",
+                    "skeletal enhancers (mundane)","aortic supercharger (mundane)",
+                    # Exotic Pets
+
+    ]
 
     # Open the cards file from YakTribe:
     if cardpath.startswith("https://yaktribe.games/underhive/print/cards"):
@@ -69,14 +87,14 @@ def generate_gang_quickref(cardpath):
     gang_type = soup.body.find_all("table")[-2].find_all('td')[0].contents[0]
 
     # Get the ganger names. Currently not using these for anything.
-    ganger_names = [name.contents[1].text.rstrip() for name in soup.find_all("h5")][:-1]
+    # ganger_names = [name.contents[1].text.rstrip() for name in soup.find_all("h5")][:-1]
 
-    # Parse the weapon tables on the cards to get the weapon traits. 
+    # Parse the weapon tables on the cards to get the weapon traits.
     gang_weapon_traits = []
 
     weapon_tables = soup.find_all("table","gang-ganger-weapons")
     # Each element of weapon_tables represents the weapons on one
-    # fighter card. The top 
+    # fighter card.
     for w in weapon_tables:
         for row in w.find_all("tr")[1:]:
             traits = row.contents[-2].contents[0].text.lstrip().rstrip().split(',')
@@ -111,11 +129,11 @@ def generate_gang_quickref(cardpath):
     gang_wargear = {gear.lower() for gear in gang_wargear if gear != ''}
     gang_skills = {skill.lower() for skill in gang_skills if skill != ''}
     gang_rules = {rule.lower() for rule in gang_rules if rule != ''}
-    
-    # Group activation skills are a bit fiddly - 
-    groupacts = {r for r in gang_rules if r.startswith("group activation") 
+
+    # Group activation skills are a bit fiddly -
+    groupacts = {r for r in gang_rules if r.startswith("group activation")
                  and r != "group activation (exotic beasts)"}
-    gang_rules = {r for r in gang_rules if not r.startswith("group activation") 
+    gang_rules = {r for r in gang_rules if not r.startswith("group activation")
                  or r == "group activation (exotic beasts)"}
     if len(groupacts) >= 1:
         gang_rules.add("group activation (x)")
@@ -132,7 +150,7 @@ def generate_gang_quickref(cardpath):
         len(check_skills) +
         len(check_wargear) +
         len(check_rules) > 0):
-     
+
         additional = {}
         add_from_traits = weapon_traits[
             weapon_traits['Trait Name'].str.lower().isin(check_traits)
@@ -201,8 +219,10 @@ def generate_gang_quickref(cardpath):
 
 
     # Filter the big tables to what this gang needs.
-    gang_trait_table = weapon_traits[weapon_traits['Trait Name'].str.lower().isin(gang_weapon_traits)]
-    gang_skill_table = universal[universal["Skill Name"].str.lower().isin(gang_skills)]
+    gang_trait_table = weapon_traits[
+        weapon_traits['Trait Name'].str.lower().isin(gang_weapon_traits)]
+    gang_skill_table = universal[
+        universal["Skill Name"].str.lower().isin(gang_skills)]
 
     gang_wyrd_table = wyrd[wyrd["Power Name"].str.lower().isin(gang_skills) |
                            wyrd["Combi Name"].str.lower().isin(gang_skills)]
@@ -243,7 +263,7 @@ def generate_gang_quickref(cardpath):
                       and s not in list(wyrd["Combi Name"].str.lower())]
     unknown_wargear = [w for w in gang_wargear if w not in ignore_rules
                        and w not in list(wargear["Wargear Name"].str.lower())]
-    unknown_special = [r for r in gang_rules if r not in ignore_rules 
+    unknown_special = [r for r in gang_rules if r not in ignore_rules
                        and r not in list(special_rules["Rule"].str.lower())]
     ignore_wargear = [w for w in gang_wargear if w in ignore_rules]
     ignore_special = [r for r in gang_rules if r in ignore_rules]

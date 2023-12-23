@@ -1,1 +1,19 @@
 Wargear Name,Description,Additional Rules
+Cranial Alpha,"This fighter is immune to the Insane condition.",
+Cranial Gamma,"This fighter is immune to both the Insane and the Intoxicated conditions.",
+Cranial Omega,"This fighter is immune to the Insane and Intoxicated conditions. In addition, the fighter cannot become Broken.",
+Ocular Alpha,"This fighter is considered to always be equipped with an infra-sight, the benefits of which are applied to any ranged weapon they carry.","{'Wargear' : {'Infra-Sight'}}"
+Ocular Gamma,"This fighter is considered to always be equipped with both an infra-sight and a mono-sight, the benefits of which are applied to any ranged weapon they carry.","{'Wargear' : {'Infra-Sight','Mono-Sight'}}"
+Ocular Omega,"This fighter is considered to always be equipped with an infra-sight and a mono-sight, the benefits of which are applied to any ranged weapon they carry, and photo-goggles.","{'Wargear' : {'Infra-Sight','Mono-Sight','Photo-Goggles'}}"
+Sindextrous Alpha,"This fighter ignores the effects of the Disarm trait.",
+Sindextrous Gamma,"This fighter ignores the effects of the Disarm trait and they do not suffer a -1 to hit modifier when making close combat attacks if they have to turn to face their opponent before attacking.",
+Sindextrous Omega,"This fighter ignores the effects of the Disarm trait and they do not suffer a -1 to hit modifier when making close combat attacks if they have to turn to face their opponent before attacking. In addition, this fighter’s attacks cannot be parried.",
+Motive Alpha,"This fighter ignores any negative Movement modifiers caused by moving through difficult terrain.",
+Motive Gamma,"This fighter ignores any negative Movement modifiers caused by moving through difficult terrain and adds 2"" to their Movement when moving vertically (for example, when climbing up a ladder or other vertical surface).",
+Motive Omega,"This fighter ignores any negative Movement modifiers caused by moving through difficult terrain and adds 2"" to their Movement when moving vertically (for example, when climbing up a ladder or other vertical surface). In addition, this fighter may re-roll failed Initiative checks to see if they fall when they go from Standing to Prone within ½"" of the edge of a level or platform.",
+Torsonic Alpha,"An unarmed attack made by this fighter has a Damage characteristic of 3, rather than the usual 1.",
+Torsonic Gamma,"An unarmed attack made by this fighter has a Damage characteristic of 3, rather than the usual 1. In addition, this fighter may apply a +2 modifier to their Strength characteristic when resolving hits made with a weapon that has either the Melee or Versatile trait.",
+Torsonic Omega,"An unarmed attack made by this fighter has a Damage characteristic of 3, rather than the usual 1. In addition, this fighter may apply a +2 modifier to their Strength characteristic when resolving hits made with a weapon that has either the Melee or Versatile trait. Finally, any weapon this fighter is equipped with is considered to have suspensors fitted to it.",
+Vascular Alpha,"This fighter may apply a +1 modifier to their Toughness characteristic for the purposes of the number of Flesh Wounds they can take before going Out of Action.",
+Vascular Gamma,"This fighter may apply a +1 modifier to their Toughness characteristic for the purposes of the number of Flesh Wounds they can take before going Out of Action. In addition, this fighter may re-roll any Toughness check they are required to make.",
+Vascular Omega,"This fighter may apply a +1 modifier to their Toughness characteristic for the purposes of the number of Flesh Wounds they can take before going Out of Action. In addition, this fighter may re-roll any Toughness check they are required to make. Finally, in the End phase of each round, this Fighter may discard a Flesh Wound they have suffered.",
