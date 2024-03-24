@@ -216,6 +216,55 @@
     {% else %}
     <h3>No wargear found.</h3>
     {% endif %}
+    {% if conditions is defined %}
+    <br>
+    <h3>Conditions</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Condition Name</th>
+                <th>Condition Description</th>
+                <th>Additional Rules</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in conditions.index %}
+            <tr>
+                <td>{{ conditions['Condition Name'][row] }}</td>
+                <td>{{ conditions['Description'][row] }}
+                    {% if conditions['Actions'][row] is iterable %}
+                                {% for ability in conditions['Actions'][row] %}
+                                    <table>
+                                        <thead>
+                                            <th>{{ ability }}</th>
+                                            <th>{{ actions[actions['Action Name']==ability]['Action Type'].values[0] }}</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                            <td colspan="2">{{ actions[actions['Action Name']==ability]['Description'].values[0] }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                {% endfor %}
+                            {% endif %}
+                </td>
+                <td>{% if conditions['Additional Rules'][row] is mapping %}
+                    {% for k in conditions['Additional Rules'][row].keys() %}
+                        {% if k != 'Actions' %}
+                            {{ k }}:
+                            {% for v in conditions['Additional Rules'][row][k] %}
+                                {{ v }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                </td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    {% endif %}    
     {% if hide_unknown == 'False' %}
         {% if unknown_rules is not none %}
         <br>
@@ -232,5 +281,10 @@
         <p>{{ ignore_gang }}</p>
         {% endif %}
     {% endif %}
-    </body>
-    </html>
+    <hr></hr>
+    <footer>
+        <div class="toolname">Mercator Legis</div>
+        <div class="toolurl">remysparks.pythonanywhere.com</div>
+    </footer>
+</body>
+</html>

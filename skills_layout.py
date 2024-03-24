@@ -44,16 +44,21 @@ def generate_gang_quickref(cardpath):
 
     special_rules = pd.read_csv("specials.csv")
 
+    conditions = pd.read_csv("conditions.csv")
+
     # These rules impact things outside of the battle, or are already 
     # incorporated into fighter stats, so don't need to
     # be on the quick reference.
-    ignore_rules = ["gang fighter (ganger)","gang fighter (prospect)",
-                    "gang fighter (juve)","gang fighter (crew)","gang leader",
-                    "fast learner","tools of the trade","promotion (specialist)", 
-                    "promotion (champion)","psychoteric whispers",
-                    "infiltration","master of cyberteknika","fresh from the academy",
-                    "forged guilder seal","mnemonic inload spike","opulent jewellery"
-
+    ignore_rules = ["gang fighter (ganger)", "gang fighter (prospect)",
+                    "gang fighter (juve)", "gang fighter (crew)", "gang leader",
+                    "fast learner", "tools of the trade", "promotion (specialist)", 
+                    "promotion (champion)", "psychoteric whispers", "outlaw",
+                    "infiltration", "master of cyberteknika", "fresh from the academy",
+                    "forged guilder seal", "mnemonic inload spike", "opulent jewellery",
+                    "out of control", "limited learning capacity", "experimental elixirs",
+                    "seize the prize", "slopper", "rogue doc", "ammo-jack", "whisper merchant"
+                    "combat ready", "bare knuckle fighter", "psyniscience", "techno-baubles",
+                    "friends in the trade", "one with the beast",
                     # Genesmithing
                     "vatborn","unborn agility","unborn brawn", 
                     "unborn combat","unborn cunning","unborn ferocity","unborn shooting",
@@ -65,6 +70,11 @@ def generate_gang_quickref(cardpath):
                     "bionic arm (mundane)","bionic leg (mundane)",
                     "skeletal enhancers (mundane)","aortic supercharger (mundane)",
                     # Exotic Pets
+                    "chaos familiar", "chaos familiar x2", "cyber-mastiff", "hardcase cyber-mastiff",
+                    "hacked cyber-mastiff", "psychic familiar", "sumpkroc", "sheen bird",
+                    "cherub-servitor", "cephalopod spekter", "psychoteric wyrm", "phyrr cat",
+                    "phelynx", "cyberarachnid", "caryatid", "grapplehawk", "gyrinx cat", 
+                    "giant rat", "giant rat x2", "giant rat x3"
 
     ]
 
@@ -137,8 +147,9 @@ def generate_gang_quickref(cardpath):
                  or r == "group activation (exotic beasts)"}
     if len(groupacts) >= 1:
         gang_rules.add("group activation (x)")
-    # Actions are only granted by other rules, not listed directly.
+    # Actions and conditions are only granted by other rules, not listed directly.
     gang_actions = set()
+    gang_conditions = set()
 
     # Get additional rules granted by written rules.
     check_traits = gang_weapon_traits
@@ -154,7 +165,7 @@ def generate_gang_quickref(cardpath):
         additional = {}
         add_from_traits = weapon_traits[
             weapon_traits['Trait Name'].str.lower().isin(check_traits)
-            & weapon_traits['Additional Rules'].notna()]
+            & weapon_traits['Additional Rules'].notna()]['Additional Rules']
         add_from_skills = universal[
             universal["Skill Name"].str.lower().isin(check_skills)
             & universal['Additional Rules'].notna()]['Additional Rules']
@@ -183,6 +194,8 @@ def generate_gang_quickref(cardpath):
                             additional[k] = {i.lower() for i in v}
         if 'Actions' in additional.keys():
             gang_actions = gang_actions.union(additional['Actions'])
+        if 'Conditions' in additional.keys():
+            gang_conditions = gang_conditions.union(additional['Conditions'])
         if 'Weapon Traits' in additional.keys():
             check_traits = {
                 trait for trait in additional['Weapon Traits']
@@ -229,8 +242,10 @@ def generate_gang_quickref(cardpath):
 
     gang_wargear_table = wargear[wargear["Wargear Name"].str.lower().isin(gang_wargear)]
     gang_specials_table = special_rules[special_rules["Rule"].str.lower().isin(gang_rules)]
+    gang_conditions_table = conditions[conditions["Condition Name"].str.lower().isin(gang_conditions)]
 
-    for table in [gang_trait_table,gang_skill_table,gang_wyrd_table,gang_wargear_table,gang_specials_table]:
+    for table in [gang_trait_table, gang_skill_table, gang_wyrd_table,
+                  gang_wargear_table, gang_specials_table, gang_conditions_table]:
         filled = table["Additional Rules"].fillna("{'Actions':None}")
         action_list = []
         for row in filled.apply(eval):
@@ -277,4 +292,4 @@ def generate_gang_quickref(cardpath):
     if ignore_gang == set():
         ignore_gang = None
 
-    return gang_name,gang_type,gang_skill_table,gang_wyrd_table,gang_specials_table,gang_trait_table,gang_wargear_table,gang_actions_table,unknown_rules,ignore_gang
+    return gang_name,gang_type,gang_skill_table,gang_wyrd_table,gang_specials_table,gang_trait_table,gang_wargear_table,gang_actions_table,gang_conditions_table,unknown_rules,ignore_gang

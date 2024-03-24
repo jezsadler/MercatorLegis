@@ -56,7 +56,7 @@ def contact():
 def qr_sheet():
     try:
         gang_name,gang_type,gang_skills,wyrd,specials, \
-            weapon_traits,wargear,actions,unknown_rules,ignore_gang \
+            weapon_traits,wargear,actions,conditions,unknown_rules,ignore_gang \
                 = generate_gang_quickref(request.args['gangpath'])
     except (HTTPError, IndexError):
         flash("Could not find a gang with the URL or ID you entered. Please try again.")
@@ -74,5 +74,6 @@ def qr_sheet():
                            weapon_traits=weapon_traits,
                            wargear=wargear,
                            actions=actions,
+                           conditions=conditions,
                            unknown_rules=unknown_rules,
                            ignore_gang=ignore_gang)

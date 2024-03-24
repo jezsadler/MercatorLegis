@@ -20,7 +20,7 @@ Prime Specimen,"+1 to any single characteristics.",
 Redundant Organs,"When suffering a Lasting Injury, roll twice and apply the lowest result. Can't be combined with Over-Engineered.",
 Alpha's Lineage,"Leadership skill set counts as Primary. Group Activation (+1).",
 The Tyrant's Own,"Leader only. +1 to any two characteristics.",
-Data-Slug Overlay,"When activating for the first time in a battle, pass an Intelligence test or gain Insanity.",
+Data-Slug Overlay,"When activating for the first time in a battle, pass an Intelligence test or gain Insanity.","{'Conditions':{'Insane'}}"
 Doc's Failure,"-1 to two of the following: Movement, Strength, Toughness or Wounds. Can't choose a characteristic if it would be reduced to 0.",
 Proto Goliath,"+1” Movement, -1 Strength & Toughness, -2 Cool, +2 Intelligence, +1 Willpower.",
 Genetic Outsider,Only Leader & Champions (not Specialist!). Can't use Group Activations.,

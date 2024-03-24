@@ -34,6 +34,23 @@ blockquote {
     box-shadow: 2px 2px brown;
 }
 
+footer {
+    display:block;
+    background-color: cornsilk;
+    font-size:12pt;
+    position:fixed; 
+    width: 97%;
+    bottom: 0;
+}
+
+.toolname {
+  float:left;
+}
+
+.toolurl {
+  float:right;
+}
+
 form.contact label {
     /* font-size: 1.2em;
     font-weight: bold; */
